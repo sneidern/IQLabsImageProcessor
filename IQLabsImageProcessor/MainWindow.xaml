@@ -1,0 +1,101 @@
+﻿<Window x:Class="IQLabsImageProcessor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="IQLabsImageProcessor" Height="481" Width="1022">
+    <Grid>
+        <Grid HorizontalAlignment="Stretch" Name="grid1" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="21" />
+                <RowDefinition Height="263*" />
+                <RowDefinition Height="27" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="362*" />
+                <ColumnDefinition Width="160" />
+            </Grid.ColumnDefinitions>
+            <StatusBar HorizontalAlignment="Stretch" Name="statusBar1" VerticalAlignment="Stretch" Grid.Row="2">
+                <StatusBarItem Name="statusF1" Width="90" Content="x: y:" HorizontalAlignment="Left" />
+                <StatusBarItem Name="statusF2" Width="200" Content="R: Gr: Gb: B:" HorizontalAlignment="Left" />
+                <StatusBarItem Name="statusF3" Width="265" Content="Av R: Av Gr: Av Gb: Av B:" HorizontalAlignment="Left" />
+                <StatusBarItem Name="statusF4" Width="265" Content="SD R: SD Gr: SD Gb: SD B:" HorizontalAlignment="Left" />
+            </StatusBar>
+            <StackPanel Grid.Column="1" Name="stackPanel1" Grid.RowSpan="2">
+                <Canvas Height="100" Name="canvas1" />
+                <Expander Grid.Column="1" Header="Process Control" Name="expander3" VerticalAlignment="Top">
+                    <Grid>
+                        <WrapPanel Name="wrapPanel4">
+                            <RadioButton Content="Pure Raw" Height="20" Name="radioButton_pureRaw" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                            <RadioButton Content="Optical Black" Height="20" Name="radioButton_OpticalBlack" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                            <RadioButton Content="White Balance" Height="20" Name="radioButton_WhiteBalance" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                            <RadioButton Content="Demosaic" Height="20" Name="radioButton_Demosaic" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                            <RadioButton Content="RGB Color" Height="20" Name="radioButton_RGBColor" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                            <RadioButton Content="Tonecurve" Height="20" Name="radioButton_Tonecurve" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                        </WrapPanel>
+                    </Grid>
+                </Expander>
+                <Expander Grid.Column="1" Header="Raw Control" Name="expander1" >
+                    <Grid>
+                        <WrapPanel Name="wrapPanel1">
+                            <xctk:IntegerUpDown FormatString="N0" Value="0" Increment="1" Maximum="4095" Width="65" ValueChanged="IntegerUpDown_ValueChanged" Name="num_OBLevel" />
+                            <Label Content="OB (12bit)" Height="28" Name="label1" />
+                            <CheckBox Content="OB Gain Comp" Height="16" Name="checkBox_OBGainComp" Width="128" />
+                            <xctk:DecimalUpDown FormatString="F3" Increment=".001" Maximum="4" Name="num_exposuregain" Value="1" Width="65" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <Label Content="Exposure Gain" Height="28" Name="label6" Width="90" />
+                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_RGain" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <Label Content="R Gain" Height="28" Name="label2" Width="63" />
+                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_GGain" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <Label Content="G Gain" Height="28" Name="label3" Width="63" />
+                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_BGain" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <Label Content="B Gain" Height="28" Name="label4" Width="63" />
+                            <xctk:IntegerUpDown FormatString="N0" Increment="1" Maximum="4095" Name="num_FlareLevel" Value="0" Width="65" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <Label Content="Flare" Height="28" Name="label5" />
+                        </WrapPanel>
+                    </Grid>
+                </Expander>
+                <Expander Header="RGB Color" Name="expander2">
+                    <Grid>
+                        <WrapPanel Name="wrapPanel2">
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RR" Value="1" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RG" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RB" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GR" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GG" Value="1" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GB" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BR" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BG" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BB" Value="1" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                        </WrapPanel>
+                    </Grid>
+                </Expander>
+                <Expander Header="Tonecurve" Name="expander4">
+                    <Grid>
+                        <WrapPanel Name="wrapPanel5">
+                            <Button Content="Button" Height="23" Name="button1" Width="75" />
+                        </WrapPanel>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+            <Menu Name="menu1" Grid.RowSpan="1" Grid.ColumnSpan="1">
+                <MenuItem Header="File">
+                    <MenuItem Header="Open Raw" Name="MenuOpenRaw" Click="MenuOpenRaw_Click" />
+                    <MenuItem Header="Open Image" Name="MenuOpenImage" Click="MenuOpenImage_Click" />
+                    <MenuItem Header="Save Image" Name="MenuSave" Click="MenuSaveImage_Click" />
+                </MenuItem>
+                <MenuItem Header="Measurements">
+                    <MenuItem Header="Get Macbeth Stats" Name="MenuGetMacBethStats" />
+                    <MenuItem Header="sRGB Calibration" Name="MenuSRGBCalibration" Click="MenuSRGBCalibration_Click" />
+                </MenuItem>
+            </Menu>
+            <ScrollViewer Grid.Row="1" Name="scrollViewer1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.RowSpan="1">
+                <Image Name="image1" Stretch="None" PreviewMouseMove="image1_PreviewMouseMove" PreviewMouseDown="image1_PreviewMouseDown" PreviewMouseUp="image1_PreviewMouseUp" />
+            </ScrollViewer>
+            <WrapPanel Grid.Column="1" Grid.Row="2" Name="wrapPanel3">
+                <Button Content="+" Height="23" Name="button_zoomIn" Width="23" Click="button_zoomIn_Click" />
+                <Button Content="-" Height="23" Name="button_zoomOut" Width="23" Click="button_zoomOut_Click" />
+                <Label Content="100%" Height="28" Name="label_zoomRatio" />
+            </WrapPanel>
+            <Rectangle Grid.Row="1" Height="4" HorizontalAlignment="Left" Margin="53,44,0,0" Name="rectangle_cropRect" Stroke="Red" VerticalAlignment="Top" Width="4" StrokeThickness="2" Visibility="Hidden" />
+        </Grid>
+    </Grid>
+</Window>
