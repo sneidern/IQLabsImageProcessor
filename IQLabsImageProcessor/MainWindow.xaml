@@ -25,7 +25,7 @@
                 <Expander Grid.Column="1" Header="Process Control" Name="expander3" VerticalAlignment="Top">
                     <Grid>
                         <WrapPanel Name="wrapPanel4">
-                            <RadioButton Content="Pure Raw" Height="20" Name="radioButton_pureRaw" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
+                            <RadioButton Content="Pure Raw" Height="20" Name="radioButton_pureRaw" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" IsChecked="True" />
                             <RadioButton Content="Optical Black" Height="20" Name="radioButton_OpticalBlack" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
                             <RadioButton Content="White Balance" Height="20" Name="radioButton_WhiteBalance" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
                             <RadioButton Content="Demosaic" Height="20" Name="radioButton_Demosaic" Width="100" Margin="10,0,0,0" Click="radioButton_imageChanged_Click" />
@@ -34,21 +34,21 @@
                         </WrapPanel>
                     </Grid>
                 </Expander>
-                <Expander Grid.Column="1" Header="Raw Control" Name="expander1" >
+                <Expander Grid.Column="1" Header="Raw Params" Name="expander1" >
                     <Grid>
                         <WrapPanel Name="wrapPanel1">
-                            <xctk:IntegerUpDown FormatString="N0" Value="0" Increment="1" Maximum="4095" Width="65" ValueChanged="IntegerUpDown_ValueChanged" Name="num_OBLevel" />
+                            <xctk:IntegerUpDown FormatString="N0" Value="0" Increment="1" Maximum="4095" Width="65" Name="num_OBLevel" KeyDown="IntegerUpDown_ValueChanged" />
                             <Label Content="OB (12bit)" Height="28" Name="label1" />
                             <CheckBox Content="OB Gain Comp" Height="16" Name="checkBox_OBGainComp" Width="128" />
-                            <xctk:DecimalUpDown FormatString="F3" Increment=".001" Maximum="4" Name="num_exposuregain" Value="1" Width="65" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F3" Increment=".001" Maximum="4" Name="num_exposuregain" Value="1" Width="65" KeyDown="IntegerUpDown_ValueChanged" />
                             <Label Content="Exposure Gain" Height="28" Name="label6" Width="90" />
-                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_RGain" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_RGain" KeyDown="IntegerUpDown_ValueChanged" />
                             <Label Content="R Gain" Height="28" Name="label2" Width="63" />
-                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_GGain" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_GGain" KeyDown="IntegerUpDown_ValueChanged" />
                             <Label Content="G Gain" Height="28" Name="label3" Width="63" />
-                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_BGain" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F3" Value="1" Increment=".001"  Maximum="4" Width="65" Name="num_BGain" KeyDown="IntegerUpDown_ValueChanged" />
                             <Label Content="B Gain" Height="28" Name="label4" Width="63" />
-                            <xctk:IntegerUpDown FormatString="N0" Increment="1" Maximum="4095" Name="num_FlareLevel" Value="0" Width="65" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:IntegerUpDown FormatString="N0" Increment="1" Maximum="4095" Name="num_FlareLevel" Value="0" Width="65" KeyDown="IntegerUpDown_ValueChanged" />
                             <Label Content="Flare" Height="28" Name="label5" />
                         </WrapPanel>
                     </Grid>
@@ -56,15 +56,15 @@
                 <Expander Header="RGB Color" Name="expander2">
                     <Grid>
                         <WrapPanel Name="wrapPanel2">
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RR" Value="1" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RG" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RB" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GR" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GG" Value="1" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GB" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BR" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BG" Value="0" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
-                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BB" Value="1" Width="50" Minimum="-2" ValueChanged="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RR" Value="1" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RG" Value="0" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_RB" Value="0" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GR" Value="0" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GG" Value="1" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_GB" Value="0" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BR" Value="0" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BG" Value="0" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
+                            <xctk:DecimalUpDown FormatString="F2" Increment="0.01" Maximum="4" Name="decimal_RGB_BB" Value="1" Width="50" Minimum="-2" KeyDown="IntegerUpDown_ValueChanged" />
                         </WrapPanel>
                     </Grid>
                 </Expander>
@@ -83,12 +83,12 @@
                     <MenuItem Header="Save Image" Name="MenuSave" Click="MenuSaveImage_Click" />
                 </MenuItem>
                 <MenuItem Header="Measurements">
-                    <MenuItem Header="Get Macbeth Stats" Name="MenuGetMacBethStats" />
+                    <MenuItem Header="Get Macbeth Stats" Name="MenuGetMacBethStats" Click="MenuGetMacBethStats_Click" />
                     <MenuItem Header="sRGB Calibration" Name="MenuSRGBCalibration" Click="MenuSRGBCalibration_Click" />
                 </MenuItem>
             </Menu>
             <ScrollViewer Grid.Row="1" Name="scrollViewer1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.RowSpan="1">
-                <Image Name="image1" Stretch="None" PreviewMouseMove="image1_PreviewMouseMove" PreviewMouseDown="image1_PreviewMouseDown" PreviewMouseUp="image1_PreviewMouseUp" />
+                <Image Name="image1" Stretch="None" PreviewMouseMove="image1_PreviewMouseMove" PreviewMouseDown="image1_PreviewMouseDown" PreviewMouseUp="image1_PreviewMouseUp" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </ScrollViewer>
             <WrapPanel Grid.Column="1" Grid.Row="2" Name="wrapPanel3">
                 <Button Content="+" Height="23" Name="button_zoomIn" Width="23" Click="button_zoomIn_Click" />
