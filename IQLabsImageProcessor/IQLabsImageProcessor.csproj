@@ -72,8 +72,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="QRDecomposition.cs" />
-    <Compile Include="SingularValueDecomposition.cs" />
+    <Compile Include="calibration.cs" />
+    <Compile Include="imagepipeline.cs" />
+    <Compile Include="imagestats.cs" />
+    <Compile Include="dotnetmatrix\QRDecomposition.cs" />
+    <Compile Include="dotnetmatrix\SingularValueDecomposition.cs" />
+    <Compile Include="rawdataparser.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -82,10 +86,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CholeskyDecomposition.cs" />
-    <Compile Include="EigenvalueDecomposition.cs" />
-    <Compile Include="GeneralMatrix.cs" />
-    <Compile Include="LUDecomposition.cs" />
+    <Compile Include="dotnetmatrix\CholeskyDecomposition.cs" />
+    <Compile Include="dotnetmatrix\EigenvalueDecomposition.cs" />
+    <Compile Include="dotnetmatrix\GeneralMatrix.cs" />
+    <Compile Include="dotnetmatrix\LUDecomposition.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
