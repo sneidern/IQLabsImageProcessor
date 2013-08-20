@@ -139,12 +139,24 @@ namespace IQLabsImageProcessor
             image1.LayoutTransform = xform;
         }
 
+        private void image1_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            selection.drawRectState = 1; //drawing
+            selection.X = (int)e.GetPosition(image1).X; // position in image
+            selection.Y = (int)e.GetPosition(image1).Y; // position in image
+
+            //rectangle_cropRect.Width = 4;
+            //rectangle_cropRect.Height = 4;
+        }
+
         private void image1_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             Point loc = e.GetPosition(image1);
 
-            statusF1.Content = "x:" + (int)loc.X + " " + "y:" + (int)loc.Y; // just write x,y coordinates in status bar
+            // just write x,y coordinates in status bar
+            statusF1.Content = "x:" + (int)loc.X + " " + "y:" + (int)loc.Y; 
 
+            // write current pixel values, or 2x2 group for Raw image
             if (showingRaw == false) // BMP file on screen
             {
                 byte[] pixels = getPixelsFromBMPImage(loc, 1, 1);
@@ -158,79 +170,85 @@ namespace IQLabsImageProcessor
             }
 
             // update rectangle if mouse is down
-            if (selection.drawRectState == 1)
-            { // drawing                
+            if (selection.drawRectState == 1) // drawing                
+            {
                 rectangle_cropRect.Visibility = Visibility.Visible;
-                int rectPosX = (int)(((double)selection.X * xform.ScaleX - scrollViewer1.HorizontalOffset));
-                int rectPosY = (int)(((double)selection.Y * xform.ScaleY - scrollViewer1.VerticalOffset));
 
+                // starting position of rectangle is upper/leftmost of mouse down and current mouse location
+                int rectPosX = (int)Math.Min(loc.X, selection.X);
+                int rectPosY = (int)Math.Min(loc.Y, selection.Y);
+
+                // convert location from image to window
+                rectPosX = (int)(((double)rectPosX * xform.ScaleX - scrollViewer1.HorizontalOffset));
+                rectPosY = (int)(((double)rectPosY * xform.ScaleY - scrollViewer1.VerticalOffset));
+
+                // if image does not fill the scrollviewer, then it is centered, so add 1/2 of the difference
                 if (bmpSource.Width * xform.ScaleX < scrollViewer1.ActualWidth)
                     rectPosX += (int)(scrollViewer1.ActualWidth - (bmpSource.Width * xform.ScaleX)) / 2;
 
                 if (bmpSource.Height * xform.ScaleY < scrollViewer1.ActualHeight)
                     rectPosY += (int)(scrollViewer1.ActualHeight - (bmpSource.Height * xform.ScaleY)) / 2;
 
-                int rectWidth = (int)(Math.Abs(e.GetPosition(image1).X - (double)selection.X) * xform.ScaleX) - 1; // -1 avoids the mouse up event captured by the rectangle itself
-                int rectHeight = (int)(Math.Abs(e.GetPosition(image1).Y - (double)selection.Y) * xform.ScaleY) - 1; // -1 avoids the mouse up event captured by the rectangle itself
-                
-                if (rectWidth < 0)
-                    rectWidth = 0;
-                if (rectHeight < 0)
-                    rectHeight = 0;
+                // if scrollviewer scrollbar is visible, then rectangle must be offset to correct
+                if (scrollViewer1.ComputedVerticalScrollBarVisibility == Visibility.Visible)
+                    rectPosX = Math.Max(rectPosX - 3, 0);
+
+                // width and height of rectangle is abs distance between mouse down and current
+                int rectWidth = (int)(Math.Abs((loc.X - (double)selection.X)) * xform.ScaleX);
+                int rectHeight = (int)(Math.Abs((loc.Y - (double)selection.Y)) * xform.ScaleY);
 
                 rectangle_cropRect.Margin = new Thickness(rectPosX, rectPosY, 0, 0);
-                rectangle_cropRect.Width = rectWidth - (rectWidth % xform.ScaleX); // this forces rectangle to end on pixel boundaries
-                rectangle_cropRect.Height = rectHeight - (rectHeight % xform.ScaleY);
 
-                statusF1.Content = rectWidth + "," + rectHeight;
+                rectangle_cropRect.Width = rectWidth - (rectWidth % xform.ScaleX) + (int)xform.ScaleX; // this forces rectangle to end on pixel boundaries
+                rectangle_cropRect.Height = rectHeight - (rectHeight % xform.ScaleY) + (int)xform.ScaleY;
+
+                selection.height = Math.Abs((int)e.GetPosition(image1).Y - selection.Y + 1);
+                selection.width = Math.Abs((int)e.GetPosition(image1).X - selection.X + 1);
+
+                statusF1.Content = rectWidth + "," + rectHeight; // debug
+                statusF2.Content = "x:" + rectPosX + " y:" + rectPosY + " w:" + rectWidth + " h:" + rectHeight; ;
             }
         }
 
-        private void image1_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void Window_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            selection.drawRectState = 1; //drawing
-            selection.X = (int)e.GetPosition(image1).X;
-            selection.Y = (int)e.GetPosition(image1).Y;
+            if (selection.drawRectState == 1) {
+                selection.drawRectState = 0; // not drawing
 
-            rectangle_cropRect.Width = 4;
-            rectangle_cropRect.Height = 4;
+                if (selection.width < 2 || selection.height < 2) {
+                    rectangle_cropRect.Visibility = Visibility.Hidden;
+                    return;
+                }
+
+                if (stats.imageType == 0) // RAW
+                {
+                    selection.width = (selection.width / 2) * 2;
+                    selection.height = (selection.height / 2) * 2;
+                    byte[] pixels = getPixelsFromRawImage(new Point(selection.X, selection.Y), selection.width, selection.height);
+                    stats.calculateStats(pixels, selection.width, selection.height);
+                    imagestats.colorvals means = stats.getMeanValues();
+                    imagestats.colorvals stddevs = stats.getStdDev();
+                    statusF3.Content = "Av R: " + means.R + " Av Gr: " + means.GR + " Av Gb: " + means.GB + " Av B: " + means.B;
+                    statusF4.Content = "SD R: " + stddevs.R + " SD Gr: " + stddevs.GR + " SD Gb: " + stddevs.GB + " SD B: " + stddevs.B;
+                } else // BMP
+                {
+                    if (selection.width < 1 || selection.height < 1)
+                        return;
+                    byte[] pixels = getPixelsFromBMPImage(new Point(selection.X, selection.Y), selection.width, selection.height);
+                    stats.calculateStats(pixels, selection.width, selection.height);
+                    imagestats.colorvals means = stats.getMeanValues();
+                    imagestats.colorvals stddevs = stats.getStdDev();
+                    statusF3.Content = "Av R: " + means.R + " Av G: " + means.G + " Av B: " + means.B;
+                    statusF4.Content = "SD R: " + stddevs.R + " SD G: " + stddevs.G + " SD B: " + stddevs.B;
+                }
+            }
         }
 
         private void image1_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            selection.drawRectState = 0; // not drawing
-            selection.height = (int)e.GetPosition(image1).Y - selection.Y;
-            selection.width = (int)e.GetPosition(image1).X - selection.X;
 
-            if (selection.width < 2 || selection.height < 2) {
-                rectangle_cropRect.Visibility = Visibility.Hidden;
-                return;
-            }
-
-            if (stats.imageType == 0) // RAW
-            {
-                selection.width = (selection.width / 2) * 2;
-                selection.height = (selection.height / 2) * 2;
-                byte[] pixels = getPixelsFromRawImage(new Point(selection.X, selection.Y), selection.width, selection.height);
-                stats.calculateStats(pixels, selection.width, selection.height);
-                imagestats.colorvals means = stats.getMeanValues();
-                imagestats.colorvals stddevs = stats.getStdDev();
-                statusF3.Content = "Av R: " + means.R + " Av Gr: " + means.GR + " Av Gb: " + means.GB + " Av B: " + means.B;
-                statusF4.Content = "SD R: " + stddevs.R + " SD Gr: " + stddevs.GR + " SD Gb: " + stddevs.GB + " SD B: " + stddevs.B;
-            }
-            else // BMP
-            {
-                if (selection.width < 1 || selection.height < 1)
-                    return;
-                byte[] pixels = getPixelsFromBMPImage(new Point(selection.X, selection.Y), selection.width, selection.height);
-                stats.calculateStats(pixels, selection.width, selection.height);
-                imagestats.colorvals means = stats.getMeanValues();
-                imagestats.colorvals stddevs = stats.getStdDev();
-                statusF3.Content = "Av R: " + means.R + " Av G: " + means.G + " Av B: " + means.B;
-                statusF4.Content = "SD R: " + stddevs.R + " SD G: " + stddevs.G + " SD B: " + stddevs.B;
-            }
         }
-        
+
         private void updateDisplayImageRGB()
         {
             if ((openImage.rawWidth == 0) || (openImage.rawHeight == 0) || (rgbData8 == null))
@@ -294,7 +312,7 @@ namespace IQLabsImageProcessor
             openImage.rawHeight = openImage.rawHeight / 2 * 2;
 
             if (rectangle_cropRect.Visibility == Visibility.Visible) { // recalculate stats for ROI
-                byte[] pixels = getPixelsFromBMPImage(new Point(selection.X, selection.Y), selection.width, selection.height); // allocate mem for current pixel data values
+                byte[] pixels = getPixelsFromRawImage(new Point(selection.X, selection.Y), selection.width, selection.height); // allocate mem for current pixel data values
                 stats.calculateStats(pixels, selection.width, selection.height);
             } else {
                 stats.calculateStats(processData, openImage.rawWidth, openImage.rawHeight);
@@ -439,7 +457,7 @@ namespace IQLabsImageProcessor
 
             byte[] pixels = new byte[width * height * 2]; // allocate mem for current pixel data values
 
-            CroppedBitmap chunk = new CroppedBitmap(bmpSource, new Int32Rect(x, y, width, height)); // get 2x2 region from source
+            CroppedBitmap chunk = new CroppedBitmap(bmpSource, new Int32Rect(x, y, width, height));
 
             try {
                 chunk.CopyPixels(pixels, width*2, 0); // stuff data into 4 pixel (8 byte) array
